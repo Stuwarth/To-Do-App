@@ -8,7 +8,7 @@ import '../../models/task.dart';
 import '../widgets/input_field.dart';
 
 class AddTaskPage extends StatefulWidget {
-  const AddTaskPage({Key? key}) : super(key: key);
+  const AddTaskPage({super.key});
 
   @override
   State<AddTaskPage> createState() => _AddTaskPageState();
@@ -28,6 +28,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   int _selectedRemind = 5;
   List<int> remindList = [5, 10, 15, 20];
+  // keep internal values in English for logic, but display Spanish labels in UI
   String _selectedRepeat = 'None';
   List<String> repeatList = ['None', 'Daily', 'Weekly', 'Monthly'];
 
@@ -36,8 +37,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // ignore: deprecated_member_use
-      backgroundColor: context.theme.backgroundColor,
+  backgroundColor: context.theme.scaffoldBackgroundColor,
       appBar: _customAppBar(),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -45,21 +45,21 @@ class _AddTaskPageState extends State<AddTaskPage> {
           child: Column(
             children: [
               Text(
-                'Add Task',
+                'Añadir tarea',
                 style: headingStyle,
               ),
               InputField(
-                title: 'Title',
-                hint: 'Enter title here',
+                title: 'Título',
+                hint: 'Ingrese el título',
                 controller: _titleController,
               ),
               InputField(
-                title: 'Note',
-                hint: 'Enter note here',
+                title: 'Nota',
+                hint: 'Ingrese una nota',
                 controller: _noteController,
               ),
               InputField(
-                title: 'Date',
+                title: 'Fecha',
                 hint: DateFormat.yMd().format(_selectedDate),
                 widget: IconButton(
                   onPressed: () => _getDateFromUser(),
@@ -73,7 +73,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 children: [
                   Expanded(
                     child: InputField(
-                      title: 'Start Time',
+                      title: 'Hora de inicio',
                       hint: _startTime,
                       widget: IconButton(
                         onPressed: () => _getTimeFromUser(isStartTime: true),
@@ -89,7 +89,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   ),
                   Expanded(
                     child: InputField(
-                      title: 'End Time',
+                      title: 'Hora de fin',
                       hint: _endTime,
                       widget: IconButton(
                         onPressed: () => _getTimeFromUser(isStartTime: false),
@@ -103,8 +103,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 ],
               ),
               InputField(
-                title: 'Remind',
-                hint: '$_selectedRemind minutes early',
+                title: 'Recordatorio',
+                hint: '$_selectedRemind minutos antes',
                 widget: Row(
                   children: [
                     DropdownButton(
@@ -139,23 +139,35 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   ],
                 ),
               ),
-              InputField(
-                title: 'Repeat',
-                hint: _selectedRepeat,
+        InputField(
+        title: 'Repetir',
+        hint: _selectedRepeat == 'None'
+          ? 'Nunca'
+          : (_selectedRepeat == 'Daily'
+            ? 'Diario'
+            : (_selectedRepeat == 'Weekly'
+              ? 'Semanal'
+              : 'Mensual')),
                 widget: Row(
                   children: [
                     DropdownButton(
                       dropdownColor: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10),
-                      items: repeatList
-                          .map<DropdownMenuItem<String>>(
-                              (String value) => DropdownMenuItem(
-                                  value: value,
-                                  child: Text(
-                                    value,
-                                    style: const TextStyle(color: Colors.white),
-                                  )))
-                          .toList(),
+            items: repeatList
+              .map<DropdownMenuItem<String>>((String value) =>
+                DropdownMenuItem(
+                  value: value,
+                  child: Text(
+                  value == 'None'
+                    ? 'Nunca'
+                    : value == 'Daily'
+                      ? 'Diario'
+                      : value == 'Weekly'
+                        ? 'Semanal'
+                        : 'Mensual',
+                  style: const TextStyle(color: Colors.white),
+                  )))
+              .toList(),
                       icon: const Icon(Icons.keyboard_arrow_down,
                           color: Colors.grey),
                       iconSize: 32,
@@ -185,7 +197,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 children: [
                   _colorPalette(),
                   MyButton(
-                      label: 'Create Task',
+                      label: 'Crear tarea',
                       onTap: () {
                         _validateData();
                       }),
@@ -209,8 +221,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         ),
       ),
       elevation: 0,
-      // ignore: deprecated_member_use
-      backgroundColor: context.theme.backgroundColor,
+  backgroundColor: context.theme.scaffoldBackgroundColor,
       actions: const [
         CircleAvatar(
           backgroundImage: AssetImage('images/person.jpeg'),
@@ -221,17 +232,16 @@ class _AddTaskPageState extends State<AddTaskPage> {
         ),
       ],
       centerTitle: true,
-
     );
   }
 
-  _validateData() {
+  void _validateData() {
     if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
       _addTasksToDb();
       Get.back();
     } else if (_titleController.text.isNotEmpty ||
         _noteController.text.isNotEmpty) {
-      Get.snackbar('required', 'All fields are required!',
+  Get.snackbar('Requerido', '¡Todos los campos son obligatorios!',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.white,
           colorText: pinkClr,
@@ -245,7 +255,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     }
   }
 
-  _addTasksToDb() async {
+  Future<void> _addTasksToDb() async {
     try {
       int value = await _taskController.addTask(
         task: Task(
@@ -287,7 +297,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 });
               },
               child: Padding(
-                padding: const EdgeInsets.only(right: 8.0,bottom: 8.0),
+                padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
                 child: CircleAvatar(
                   backgroundColor: index == 0
                       ? primaryClr
@@ -311,7 +321,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
-  _getDateFromUser() async {
+  Future<void> _getDateFromUser() async {
     DateTime? pickedDate = await showDatePicker(
         context: context,
         initialDate: _selectedDate,
@@ -320,12 +330,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
     if (pickedDate != null) {
       setState(() => _selectedDate = pickedDate);
-    } else {
-      print('Please select correct date');
     }
   }
 
-  _getTimeFromUser({required bool isStartTime}) async {
+  Future<void> _getTimeFromUser({required bool isStartTime}) async {
     TimeOfDay? pickedTime = await showTimePicker(
       initialEntryMode: TimePickerEntryMode.input,
       context: context,

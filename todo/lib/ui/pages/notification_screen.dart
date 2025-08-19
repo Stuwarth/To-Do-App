@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../theme.dart';
 
 class NotificationScreen extends StatefulWidget {
-  const NotificationScreen({Key? key, required this.payload}) : super(key: key);
+  const NotificationScreen({super.key, required this.payload});
 
   final String payload;
 
@@ -25,8 +25,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // ignore: deprecated_member_use
-      backgroundColor: context.theme.backgroundColor,
+      backgroundColor: context.theme.scaffoldBackgroundColor,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => Get.back(),
@@ -36,8 +35,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ),
         ),
         elevation: 0,
-        // ignore: deprecated_member_use
-        backgroundColor: context.theme.backgroundColor,
+  backgroundColor: context.theme.scaffoldBackgroundColor,
         title: Text(
           _payload.toString().split('|')[0],
           style: TextStyle(color: Get.isDarkMode ? Colors.white : darkGreyClr),
@@ -53,7 +51,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             Column(
               children: [
                 Text(
-                  'Hello, Abdulrahman',
+                  'Hola',
                   style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.w900,
@@ -63,7 +61,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   height: 10,
                 ),
                 Text(
-                  'You have a new reminder',
+                  'Tienes un nuevo recordatorio',
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w300,
@@ -95,10 +93,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           SizedBox(
                             width: 20,
                           ),
-                          Text(
-                            'Title',
-                            style: TextStyle(color: Colors.white, fontSize: 30),
-                          ),
+                              Text(
+                                'Título',
+                                style: TextStyle(color: Colors.white, fontSize: 30),
+                              ),
                         ],
                       ),
                       const SizedBox(
@@ -123,7 +121,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             width: 20,
                           ),
                           Text(
-                            'Description',
+                            'Descripción',
                             style: TextStyle(color: Colors.white, fontSize: 30),
                           ),
                         ],
@@ -151,7 +149,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             width: 20,
                           ),
                           Text(
-                            'Date',
+                            'Fecha',
                             style: TextStyle(color: Colors.white, fontSize: 30),
                           ),
                         ],

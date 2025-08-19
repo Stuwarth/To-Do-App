@@ -5,7 +5,7 @@ import 'package:todo/ui/theme.dart';
 import '../../models/task.dart';
 
 class TaskTile extends StatelessWidget {
-  const TaskTile(this.task, {Key? key}) : super(key: key);
+  const TaskTile(this.task, {super.key});
 
   final Task task;
 
@@ -83,12 +83,12 @@ class TaskTile extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 10),
               height: 60,
               width: 0.5,
-              color: Colors.grey[200]!.withOpacity(0.7),
+              color: Colors.grey[200]!.withAlpha((0.7 * 255).toInt()),
             ),
             RotatedBox(
               quarterTurns: 3,
               child: Text(
-                task.isCompleted == 0 ? 'TODO' : 'Completed',
+                task.isCompleted == 0 ? 'POR HACER' : 'Completada',
                 style: GoogleFonts.lato(
                     textStyle: const TextStyle(
                   color: Colors.white,
@@ -103,7 +103,7 @@ class TaskTile extends StatelessWidget {
     );
   }
 
-  _getBGCLR(int? color) {
+  Color _getBGCLR(int? color) {
     switch (color) {
       case 0:
         return bluishClr;

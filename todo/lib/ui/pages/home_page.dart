@@ -1,9 +1,8 @@
-import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+// ...existing code...
 import 'package:intl/intl.dart';
 import 'package:todo/services/theme_services.dart';
 import 'package:todo/ui/pages/add_task_page.dart';
@@ -14,9 +13,10 @@ import '../../models/task.dart';
 import '../../services/notification_services.dart';
 import '../size_config.dart';
 import '../theme.dart';
+import '../widgets/spanish_date_picker.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -41,8 +41,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      // ignore: deprecated_member_use
-      backgroundColor: context.theme.backgroundColor,
+      backgroundColor: context.theme.scaffoldBackgroundColor,
       appBar: _customAppBar(),
       body: Column(
         children: [
@@ -72,8 +71,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       elevation: 0,
-      // ignore: deprecated_member_use
-      backgroundColor: context.theme.backgroundColor,
+  backgroundColor: context.theme.scaffoldBackgroundColor,
       actions: [
         IconButton(
           icon: Icon(Icons.cleaning_services_outlined,
@@ -95,7 +93,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _addTaskBar() {
+  Widget _addTaskBar() {
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
       child: Row(
@@ -109,13 +107,13 @@ class _HomePageState extends State<HomePage> {
                 style: subHeadingStyle,
               ),
               Text(
-                'Today',
+                'Hoy',
                 style: subHeadingStyle,
               ),
             ],
           ),
-          MyButton(
-              label: '+ Add Task',
+      MyButton(
+        label: '+ Añadir tarea',
               onTap: () async {
                 await Get.to(() => const AddTaskPage());
                 _taskController.getTasks();
@@ -125,34 +123,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _addDateBar() {
+  Widget _addDateBar() {
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
-      child: DatePicker(
-        DateTime.now(),
-        width: 80,
-        height: 100,
-        initialSelectedDate: _selectedDate,
-        selectedTextColor: Colors.white,
-        selectionColor: primaryClr,
-        dateTextStyle: GoogleFonts.lato(
-            textStyle: const TextStyle(
-          color: Colors.grey,
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-        )),
-        dayTextStyle: GoogleFonts.lato(
-            textStyle: const TextStyle(
-          color: Colors.grey,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        )),
-        monthTextStyle: GoogleFonts.lato(
-            textStyle: const TextStyle(
-          color: Colors.grey,
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-        )),
+      child: SpanishDatePicker(
+        initialDate: DateTime.now(),
+        selectedDate: _selectedDate,
         onDateChange: (newDate) {
           setState(() {
             _selectedDate = newDate;
@@ -166,7 +142,7 @@ class _HomePageState extends State<HomePage> {
     _taskController.getTasks();
   }
 
-  _showTasks() {
+  Widget _showTasks() {
     return Expanded(
       child: Obx(() {
         if (_taskController.taskList.isEmpty) {
@@ -232,7 +208,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _noTaskMsg() {
+  Widget _noTaskMsg() {
     return Stack(
       children: [
         AnimatedPositioned(
@@ -256,16 +232,16 @@ class _HomePageState extends State<HomePage> {
                         ),
                   SvgPicture.asset(
                     'images/task.svg',
-                    // ignore: deprecated_member_use
-                    color: primaryClr.withOpacity(0.5),
+                    colorFilter: ColorFilter.mode(
+                        primaryClr.withAlpha((0.5 * 255).toInt()), BlendMode.srcIn),
                     height: 90,
-                    semanticsLabel: 'Task',
+                    semanticsLabel: 'Tarea',
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 30, vertical: 10),
                     child: Text(
-                      'You do not have any tasks yet!\nAdd new tasks to make your days productive.',
+                      'Aún no tienes tareas.\nAgrega nuevas tareas para hacer tus días productivos.',
                       style: subTitleStyle,
                       textAlign: TextAlign.center,
                     ),
@@ -286,7 +262,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _showBottomSheet(BuildContext context, Task task) {
+  void _showBottomSheet(BuildContext context, Task task) {
     Get.bottomSheet(SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.only(top: 4),
@@ -315,7 +291,7 @@ class _HomePageState extends State<HomePage> {
             task.isCompleted == 1
                 ? Container()
                 : _buildBottomSheet(
-                    label: 'Task Completed',
+                    label: 'Marcar como completada',
                     onTap: () {
                       NotifyHelper().cancelNotification(task);
                       _taskController.markTaskAsCompleted(task.id!);
@@ -323,7 +299,7 @@ class _HomePageState extends State<HomePage> {
                     },
                     clr: primaryClr),
             _buildBottomSheet(
-                label: 'Delete Task',
+                label: 'Eliminar tarea',
                 onTap: () {
                   NotifyHelper().cancelNotification(task);
                   _taskController.deleteTasks(task);
@@ -332,7 +308,7 @@ class _HomePageState extends State<HomePage> {
                 clr: Colors.red[300]!),
             Divider(color: Get.isDarkMode ? Colors.grey : darkGreyClr),
             _buildBottomSheet(
-                label: 'Cancel',
+                label: 'Cancelar',
                 onTap: () {
                   Get.back();
                 },
@@ -346,7 +322,7 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 
-  _buildBottomSheet(
+  Widget _buildBottomSheet(
       {required String label,
       required Function() onTap,
       required Color clr,

@@ -6,12 +6,12 @@ import '../theme.dart';
 
 class InputField extends StatelessWidget {
   const InputField({
-    Key? key,
+    super.key,
     required this.title,
     required this.hint,
     this.controller,
     this.widget,
-  }) : super(key: key);
+  });
 
   final String title;
   final String hint;
@@ -55,13 +55,11 @@ class InputField extends StatelessWidget {
                     hintStyle: subTitleStyle,
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
-                      // ignore: deprecated_member_use
-                      color: context.theme.backgroundColor,
+                      color: context.theme.scaffoldBackgroundColor,
                     )),
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
-                      // ignore: deprecated_member_use
-                      color: context.theme.backgroundColor,
+                      color: context.theme.scaffoldBackgroundColor,
                       width: 0,
                     )),
                   ),

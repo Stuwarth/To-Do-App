@@ -18,7 +18,7 @@ class NotifyHelper {
   final BehaviorSubject<String> selectNotificationSubject =
       BehaviorSubject<String>();
 
-  initializeNotification() async {
+  Future<void> initializeNotification() async {
     tz.initializeTimeZones();
     _configureSelectNotificationSubject();
     await _configureLocalTimeZone();
@@ -28,7 +28,6 @@ class NotifyHelper {
       requestSoundPermission: false,
       requestBadgePermission: false,
       requestAlertPermission: false,
-      onDidReceiveLocalNotification: onDidReceiveLocalNotification,
     );
 
     const AndroidInitializationSettings initializationSettingsAndroid =
@@ -50,7 +49,7 @@ class NotifyHelper {
     );
   }
 
-  displayNotification({required String title, required String body}) async {
+  Future<void> displayNotification({required String title, required String body}) async {
     print('doing test');
     var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
         'your channel id', 'your channel name',
@@ -70,17 +69,17 @@ class NotifyHelper {
     );
   }
 
-  cancelNotification(Task task) async {
+  Future<void> cancelNotification(Task task) async {
     await flutterLocalNotificationsPlugin.cancel(task.id!);
     print('Notification is canceled');
   }
 
-  cancelAllNotifications() async {
+  Future<void> cancelAllNotifications() async {
     await flutterLocalNotificationsPlugin.cancelAll();
     print('Notification is canceled');
   }
 
-  scheduledNotification(int hour, int minutes, Task task) async {
+  Future<void> scheduledNotification(int hour, int minutes, Task task) async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       task.id!,
       task.title,
@@ -88,15 +87,13 @@ class NotifyHelper {
       //tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
       _nextInstanceOfTenAM(
           hour, minutes, task.remind!, task.repeat!, task.date!),
-      const NotificationDetails(
+  const NotificationDetails(
         android: AndroidNotificationDetails(
             'your channel id', 'your channel name',
             channelDescription: 'your channel description'),
       ),
-      // ignore: deprecated_member_use
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
+  // For recent versions of flutter_local_notifications, use androidScheduleMode
+  androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
       payload: '${task.title}|${task.note}|${task.startTime}|',
     );
@@ -181,7 +178,7 @@ class NotifyHelper {
   } */
 
 //Older IOS
-  Future onDidReceiveLocalNotification(
+  Future<void> onDidReceiveLocalNotification(
       int id, String? title, String? body, String? payload) async {
     // display a dialog with the notification details, tap ok to go to another page
     /* showDialog(

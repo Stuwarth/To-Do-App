@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const Color bluishClr = Color(0xFF4e5ae8);
+// Primary palette changed to a green tone for noticeable visual change
+const Color bluishClr = Color(0xFF2E7D32); // green 700
 const Color orangeClr = Color(0xCFFF8746);
 const Color pinkClr = Color(0xFFff4667);
 const Color white = Colors.white;
@@ -13,15 +14,15 @@ const Color darkHeaderClr = Color(0xFF424242);
 class Themes {
   static final light = ThemeData(
     primaryColor: primaryClr,
-    // ignore: deprecated_member_use
-    backgroundColor: Colors.white,
+    scaffoldBackgroundColor: Colors.white,
+    colorScheme: ColorScheme.fromSeed(seedColor: primaryClr, brightness: Brightness.light),
     brightness: Brightness.light,
   );
 
   static final dark = ThemeData(
     primaryColor: darkGreyClr,
-    // ignore: deprecated_member_use
-    backgroundColor: darkGreyClr,
+    scaffoldBackgroundColor: darkGreyClr,
+    colorScheme: ColorScheme.fromSeed(seedColor: primaryClr, brightness: Brightness.dark),
     brightness: Brightness.dark,
   );
 }
